@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 fastapi = "^0.111.0"
 raw_dbmodel = { git = "https://github.com/flaviooria/raw_dbmodel.git", tag="0.2.3", extras = ["psycopg2"] }
+alembic = "^1.13.2"
 
 [build-system]
 requires = ["poetry-core"]
