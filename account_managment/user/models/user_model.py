@@ -14,3 +14,4 @@ class UserBase(SQLModel):
 class Users(UserBase, table=True):
     id: str = Field(default_factory=lambda: str(uuid4()), primary_key=True)
     token: str
+    password: str
