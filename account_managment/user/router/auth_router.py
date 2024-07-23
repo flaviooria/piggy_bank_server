@@ -1,39 +1,32 @@
-from typing import Any
+from datetime import datetime, timedelta, timezone
+from typing import Annotated, Any
 
-from bcrypt import checkpw, gensalt, hashpw
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from account_managment.shared import CurrentUserDependency, JwtUtil, Payload
 from account_managment.user.dtos import UserCreateDto, UserSingInDto
 from account_managment.user.models import Users
 from account_managment.user.respositories import UserRepository
 from account_managment.user.services import GetUserService, UserRegisterService
-
-
-def generate_token() -> str:
-    import uuid
-
-    return str(uuid.uuid4())[:6]
-
-
-class Crypt:
-    @staticmethod
-    def _str_to_bytes(text: str) -> bytes:
-        return text.encode()
-
-    @staticmethod
-    def encrypt(password: str) -> str:
-        return hashpw(Crypt._str_to_bytes(password), gensalt()).decode()
-
-    @staticmethod
-    def verify(password_plain: str, password_hashed: str) -> bool:
-        return checkpw(Crypt._str_to_bytes(password_plain), Crypt._str_to_bytes(password_hashed))
-
+from account_managment.user.utils import Crypt, generate_token
 
 auth_router = APIRouter(tags=["auth"])
 
 user_repository = UserRepository()
 user_register_service = UserRegisterService(user_repository)
 get_user_service = GetUserService(user_repository)
+
+
+def get_user(payload: Annotated[Payload, Depends(CurrentUserDependency)]):
+    email = payload.sub
+
+    user = get_user_service.execute(email)
+
+    if user is not None:
+        return user
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail="User not found")
 
 
 @auth_router.post("/signup")
@@ -76,12 +69,22 @@ def login(user_signin: UserSingInDto):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Email or Password invalid")
 
-        # TODO: Añadir almacenamiento en redis al iniciar sesión el usuario
         # TODO: Añadir utilidad para crear jwt
+        expires = datetime.now(tz=timezone.utc) + timedelta(hours=1)
+        payload = Payload(sub=user_exist.email, exp=expires, id=user_exist.id)
 
-        return user_exist.model_dump(exclude={"password": True})
+        # return user_exist.model_dump(exclude={"password": True})
+        token = JwtUtil.encode(payload)
+
+        return {"access_token": token, "token_type": "bearer"}
     except HTTPException:
         raise
+
+
+@auth_router.post('/me')
+def get_user(current_user: Annotated[Users, Depends(get_user)]):
+    # TODO: Añadir almacenamiento en redis al iniciar sesión el usuario
+    return current_user.model_dump(exclude={"password": True})
 
 
 __all__ = ["auth_router"]
