@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     DB_MOTOR: str
     DB_URI: str | None = None
 
+    SECRET_KEY: str
+
     @computed_field
     def uri_db(self) -> str:
         if self.DB_URI is not None:
