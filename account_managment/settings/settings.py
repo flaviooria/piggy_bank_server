@@ -24,6 +24,9 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
 
+    EXPIRES_ACCESS_TOKEN: str
+    EXPIRES_REFRESH_TOKEN: str
+
     @computed_field
     def uri_db(self) -> str:
         if self.DB_URI is not None:
