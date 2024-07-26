@@ -1,5 +1,3 @@
-import os
-
 from dotenv import find_dotenv, load_dotenv
 from pydantic import computed_field
 from pydantic_core import MultiHostUrl
@@ -37,8 +35,5 @@ class Settings(BaseSettings):
                                   port=int(self.POSTGRES_PORT)).unicode_string()
 
 
-env_file = ".env.production" if os.environ.get(
-    "ENVIRONMENT", "local") == "production" else ".env"
-
-load_dotenv(dotenv_path=find_dotenv(env_file))
+load_dotenv(dotenv_path=find_dotenv(".env"))
 settings = Settings()
