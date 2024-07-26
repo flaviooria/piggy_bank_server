@@ -17,11 +17,11 @@ services:
     restart: unless-stopped
   app:
     container_name: piggy_bank_app
-    image: piggy_bank:0.1.0
+    image: flaviodev99/piggy_bank_server:latest
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - .env.prod
     networks:
       - piggy_bank_network
     depends_on:
