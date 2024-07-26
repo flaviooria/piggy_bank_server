@@ -43,15 +43,15 @@ EXPIRES_ACCESS_TOKEN = get_expires(settings.EXPIRES_ACCESS_TOKEN)
 EXPIRES_REFRESH_TOKEN = get_expires(settings.EXPIRES_REFRESH_TOKEN)
 
 
-def get_user_with_access_token(payload: Annotated[Payload, Depends(
-    AuthAccessToken)]): return get_user_from_payload(payload)
+async def get_user_with_access_token(payload: Annotated[Payload, Depends(
+    AuthAccessToken)]): return await get_user_from_payload(payload)
 
 
-def get_user_with_refresh_token(payload: Annotated[Payload, Depends(
-    AuthRefreshToken)]): return get_user_from_payload(payload)
+async def get_user_with_refresh_token(payload: Annotated[Payload, Depends(
+    AuthRefreshToken)]): return await get_user_from_payload(payload)
 
 
-def get_user_from_payload(payload: Payload):
+async def get_user_from_payload(payload: Payload):
     email = payload.sub
 
     user = get_user_service.execute(email)
@@ -64,8 +64,7 @@ def get_user_from_payload(payload: Payload):
 
 
 @auth_router.post("/signup")
-def register(user_create: UserCreateDto) -> Any:
-
+async def register(user_create: UserCreateDto) -> Any:
     try:
         user_exist = get_user_service.execute(user_create.email)
 
@@ -73,7 +72,7 @@ def register(user_create: UserCreateDto) -> Any:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="User with already email exists")
 
-        password_hashed = Crypt.encrypt(user_create.password)
+        password_hashed = await Crypt.encrypt(user_create.password)
 
         user_create.password = password_hashed
 
@@ -91,7 +90,7 @@ def register(user_create: UserCreateDto) -> Any:
 
 
 @auth_router.post('/signin')
-def login(user_signin: UserSingInDto, request: Request, response: Response):
+async def login(user_signin: UserSingInDto, request: Request, response: Response):
     try:
         user_exist = get_user_service.execute(user_signin.email)
 
@@ -99,7 +98,7 @@ def login(user_signin: UserSingInDto, request: Request, response: Response):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                 detail="User not found")
 
-        if not Crypt.verify(user_signin.password, user_exist.password):
+        if not await Crypt.verify(user_signin.password, user_exist.password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="Email or Password invalid")
 
@@ -130,7 +129,7 @@ def login(user_signin: UserSingInDto, request: Request, response: Response):
 
 
 @auth_router.get('/logout')
-def logout(response: Response):
+async def logout(response: Response):
     response.delete_cookie("access_token", httponly=True)
     response.delete_cookie("refresh_token", httponly=True)
 
@@ -138,17 +137,16 @@ def logout(response: Response):
 
 
 @auth_router.get('/me', response_model=UserWithoutPasswordDto)
-def current_user(current_user: Annotated[Users, Depends(get_user_with_access_token)]):
+async def current_user(user: Annotated[Users, Depends(get_user_with_access_token)]):
     # TODO: Añadir almacenamiento en redis al iniciar sesión el usuario
-    return current_user.model_dump()
+    return user.model_dump()
 
 
 @auth_router.post('/refresh_token')
-def refresh_token(current_user: Annotated[Users, Depends(get_user_with_refresh_token)], response: Response):
-
+async def refresh_token(user: Annotated[Users, Depends(get_user_with_refresh_token)], response: Response):
     expires_access_token = EXPIRES_ACCESS_TOKEN
     payload_access_token = Payload(
-        sub=current_user.email, exp=expires_access_token, id=current_user.id)
+        sub=user.email, exp=expires_access_token, id=current_user.id)
 
     access_token = JwtUtil.encode(payload_access_token)
 

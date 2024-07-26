@@ -12,7 +12,6 @@ from account_managment.user.models import Users
 
 @asynccontextmanager
 async def lifespan_init_db(_app: FastAPI):
-    print("Init db")
     create_tables([Users, Accounts])
     yield
 
@@ -24,10 +23,10 @@ app.include_router(api_v1_router)
 
 
 @app.get("/")
-def greeting():
+async def greeting():
     return RedirectResponse(f"{settings.API_VERSION}/docs")
 
 
 @app.get("/health")
-def health():
+async def health():
     return {"ok": True}

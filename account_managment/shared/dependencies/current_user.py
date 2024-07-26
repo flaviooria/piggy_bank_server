@@ -23,15 +23,15 @@ access_token_security = CookiesTokenSecurity()
 refresh_token_security = CookiesTokenSecurity("refresh_token")
 
 
-def access_token_required(token: str | None = Depends(access_token_security)
-                          ): return get_token(token=token)
+async def access_token_required(token: str | None = Depends(access_token_security)
+                                ): return await get_token(token=token)
 
 
-def refresh_token_required(token: str | None = Depends(
-    refresh_token_security)): return get_token(token=token)
+async def refresh_token_required(token: str | None = Depends(
+    refresh_token_security)): return await get_token(token=token)
 
 
-def get_token(token: str | None):
+async def get_token(token: str | None):
     try:
         payload = JwtUtil.decode(token)
 
