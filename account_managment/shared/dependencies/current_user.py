@@ -4,7 +4,7 @@ from jwt import DecodeError, ExpiredSignatureError, InvalidSignatureError
 from account_managment.shared.utils import JwtUtil
 
 
-class CookiesToken:
+class CookiesTokenSecurity:
 
     def __init__(self, cookie_name: str = "access_token") -> None:
         self.cookie_key = cookie_name
@@ -19,8 +19,8 @@ class CookiesToken:
         return cookies
 
 
-access_token_security = CookiesToken()
-refresh_token_security = CookiesToken("refresh_token")
+access_token_security = CookiesTokenSecurity()
+refresh_token_security = CookiesTokenSecurity("refresh_token")
 
 
 def access_token_required(token: str | None = Depends(access_token_security)
