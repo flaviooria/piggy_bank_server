@@ -39,14 +39,17 @@ pip install -r requirements.txt
 ```
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn account_managment.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Instalar dependencias con poetry
 
 ```bash
 poetry install
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+```bash
+uvicorn account_managment.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ## Ejecutar con docker
