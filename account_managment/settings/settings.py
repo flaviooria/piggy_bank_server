@@ -25,6 +25,13 @@ class Settings(BaseSettings):
     EXPIRES_ACCESS_TOKEN: str
     EXPIRES_REFRESH_TOKEN: str
 
+    SMTP_HOST: str
+    SMTP_PORT: str
+    SMTP_USER: str
+    SMTP_PASSWORD: str
+    SMTP_SSL: bool | None = False
+    SMTP_TLS: bool | None = False
+
     @computed_field
     def uri_db(self) -> str:
         if self.DB_URI is not None:
