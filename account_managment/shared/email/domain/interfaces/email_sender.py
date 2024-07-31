@@ -3,7 +3,7 @@ from abc import ABC
 
 class EmailSender(ABC):
 
-    def send_email(self) -> bool:
+    async def send_email(self) -> bool:
         """
         Sends an email.
 

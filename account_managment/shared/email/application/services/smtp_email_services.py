@@ -29,7 +29,7 @@ class SmtpEmail(EmailSender):
         self._details = details
         self._msg = msg
 
-    def send_email(self) -> bool:
+    async def send_email(self) -> bool:
         subject = self._details.pop("subject")
         to = self._details.pop("to")
         _from = self._details.pop("mail_from")
