@@ -1,7 +1,10 @@
-import os
+import sys
+from abc import abstractmethod
 from pathlib import Path
+from typing import ClassVar
 
 from jinja2 import Environment, FileSystemLoader
+from mjml import mjml_to_html
 from pydantic import BaseModel
 
 from account_managment.shared.email.domain import EmailSender
@@ -15,6 +18,7 @@ class EmailBase:
     def build_template(self, html_template: "HtmlEmailTemplateService"):
         pass
 
+    @abstractmethod
     def create_email_sender(self, data: dict | BaseModel | str) -> EmailSender:
         pass
 
@@ -24,37 +28,57 @@ class HtmlEmailTemplateService:
     Class to read and render the html templates for each mail type in each use case.
     """
 
-    def __init__(self, template: str, path_template: str | None = "."):
+    TEMPLATE_FOLDER: ClassVar[str] = "shared/email/templates"
+
+    def __init__(self, template: str, template_folder: str | None = TEMPLATE_FOLDER):
         """
         Initializes an instance of the HtmlEmailService class.
 
         Args:
             template (str): The name of the HTML template file.
-            path_template (str | None, optional): The path to the
+            template_folder (str | None, optional): The path to the
             directory containing the HTML template file. Defaults to ".".
+
+        Examples:
+
+            .. code-block:: python
+                from account_managment.shared.email.application.services import HtmlEmailTemplateService
+                html_template = HtmlEmailTemplateService(template="register.jinja")
+                html_template.render({"username": "Jhon Doe"})
+                '<p>Hello, Jhon Doe</p>'
 
         Returns:
             None
         """
-        environment = Environment(loader=FileSystemLoader(path_template))
 
-        if path_template != ".":
-            path_template = self.__found_template(path_template)
+        template_folder_dir = self.__found_template_dir(template_folder)
+        environment = Environment(loader=FileSystemLoader(template_folder_dir))
 
-            environment = Environment(loader=FileSystemLoader(path_template))
+        if template_folder != HtmlEmailTemplateService.TEMPLATE_FOLDER:
+            template_folder_dir = self.__found_template_dir(template_folder)
+
+            environment = Environment(
+                loader=FileSystemLoader(template_folder_dir))
+
+        self._path_template = template_folder_dir.joinpath(template)
+
+        if not self._path_template.exists():
+            raise FileNotFoundError(f"{self._path_template} not exists")
 
         # Read the template file
         self._template = environment.get_template(template)
 
     @classmethod
-    def __found_template(cls, template_file: str):
-        grandfather_dir = Path(os.path.dirname(__file__)).parent.parent  # => account_managment\shared\email
-        template_dir = os.path.join(grandfather_dir, template_file)
+    def __found_template_dir(cls, path_template: str | Path):
+        PARENT_FOLDER = Path(sys.path[1])
+        PROJECT_FOLDER = Path(PARENT_FOLDER / "account_managment")
 
-        if Path(template_dir).exists():
-            return Path(template_dir)
+        TEMPLATE_FOLDER = Path(PROJECT_FOLDER / path_template)
 
-        raise FileNotFoundError(f"{template_dir} not exists")
+        if not TEMPLATE_FOLDER.exists():
+            raise FileNotFoundError(f"{TEMPLATE_FOLDER} not exists")
+
+        return TEMPLATE_FOLDER
 
     def render(self, data: dict | BaseModel):
         """
@@ -68,9 +92,13 @@ class HtmlEmailTemplateService:
             str: The rendered HTML email template.
         """
 
-        _data = data
+        _data_to_render = data
 
         if not isinstance(data, dict):
-            _data = data.model_dump()
+            _data_to_render = data.model_dump()
 
-        return self._template.render(_data)
+        if not str(self._path_template).endswith(".mjml"):
+            return self._template.render(_data_to_render)
+
+        rendered_mjml = self._template.render(data)
+        return mjml_to_html(rendered_mjml).html
