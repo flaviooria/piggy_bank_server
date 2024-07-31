@@ -1,0 +1,22 @@
+<!-- Company Header -->
+<mjml>
+    <mj-body>
+        <mj-section background-color="#f0f0f0">
+            <mj-column>
+                <mj-text font-size="30px">Registro satisfactorio</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+
+                <mj-divider border-color="#4987A1"></mj-divider>
+
+                <mj-text font-size="20px" color="#000000" font-family="helvetica">
+                    <span>Bienvenido a <b>Piggi Bank</b> {{username}}
+                    </span>
+                </mj-text>
+
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

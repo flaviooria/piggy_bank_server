@@ -5,6 +5,8 @@ docker-compose.yml
 .git
 LICENSE
 README.MD
+data/
+
 
 # Enviroments
 *.env
