@@ -105,6 +105,14 @@ EXPIRES_ACCESS_TOKEN='hours 1'
 
 # 1day
 EXPIRES_REFRESH_TOKEN='days 1'
+
+# Credentials api email
+SMTP_HOST=smtp.ethereal.email
+SMTP_PORT=587
+SMTP_USER=natalie24@ethereal.email
+SMTP_PASSWORD=qhWmvemsKTzyCkgZdE
+SMTP_SSL=false
+SMTP_TLS=true
 ```
 ### Modo producción ".env.prod"
 ```dotenv
@@ -144,4 +152,10 @@ API_URL=https://piggy-bank-server-eg93.onrender.com/api/v1/docs
 XATA_API_KEY=xau_IhOMiHq92MMpl34rubreWSXE28vTHvaC7
 DATABASE_URL_POSTGRES=postgresql://q4bqou:xau_IhOMiHq92MMpl34rubreWSXE28vTHvaC7@eu-west-1.sql.xata.sh/piggy_bank:main?sslmode=require
 DATABASE_URL=https://Flavio-Oria-s-workspace-q4bqou.eu-west-1.xata.sh/db/piggy_bank:main
+
+# Credentials api email
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_USER=5cc410001@smtp-brevo.com
+SMTP_PASSWORD=xsmtpsib-10a49ea97a8ed3c76ecd3a321cbb4a46818b59a4b46cabaa7b3fd0092fb5c1f9-j2nXshI4wqKWU51H
 ```
