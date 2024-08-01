@@ -6,20 +6,20 @@ from account_managment.shared.utils import JwtUtil
 
 class CookiesTokenSecurity:
 
-    def __init__(self, cookie_name: str = "access_token") -> None:
-        self.cookie_key = cookie_name
+    def __init__(self, cookie_name: str) -> None:
+        self.cookie_name = cookie_name
 
     def __call__(self, request: Request) -> str | None:
-        cookies = request.cookies.get(self.cookie_key)
+        cookie = request.cookies.get(self.cookie_name)
 
-        if cookies is None:
+        if cookie is None:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=f"{self.cookie_key} is missing")
+                status_code=status.HTTP_403_FORBIDDEN, detail=f"{self.cookie_name} is missing")
 
-        return cookies
+        return cookie
 
 
-access_token_security = CookiesTokenSecurity()
+access_token_security = CookiesTokenSecurity("access_token")
 refresh_token_security = CookiesTokenSecurity("refresh_token")
 
 
