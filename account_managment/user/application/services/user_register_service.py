@@ -1,5 +1,4 @@
-from account_managment.user.interfaces import IUser
-from account_managment.user.models import Users
+from account_managment.user.domain import IUser, Users
 
 
 class UserRegisterService:

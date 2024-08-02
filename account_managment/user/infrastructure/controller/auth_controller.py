@@ -7,12 +7,14 @@ from fastapi import (APIRouter, Depends, HTTPException, Request, Response,
 from account_managment.settings.settings import settings
 from account_managment.shared import (AuthAccessToken, AuthRefreshToken,
                                       JwtUtil, Payload)
-from account_managment.user.dtos import (UserCreateDto, UserSingInDto,
-                                         UserWithoutPasswordDto)
-from account_managment.user.models import Users
-from account_managment.user.respositories import UserRepository
-from account_managment.user.services import GetUserService, UserRegisterService
-from account_managment.user.utils import Crypt, generate_token
+from account_managment.user.application import GetUserService, UserRegisterService
+from account_managment.user.domain.dtos.user_register_dto import UserCreateDto
+from account_managment.user.domain.dtos.user_signin_dto import UserSingInDto
+from account_managment.user.domain.dtos.user_without_password import UserWithoutPasswordDto
+from account_managment.user.domain.models.user_model import Users
+from account_managment.user.infrastructure.repositories.user_repository import UserRepository
+from account_managment.user.infrastructure.utils.crypt import Crypt
+from account_managment.user.infrastructure.utils.generate_token import generate_token
 
 auth_router = APIRouter(tags=["auth"])
 

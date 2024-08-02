@@ -4,10 +4,10 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from raw_dbmodel import create_tables
 
-from account_managment.accounts.models import Accounts
+from account_managment.accounts.domain import Accounts
 from account_managment.api_v1 import api_v1_router
 from account_managment.settings.settings import settings
-from account_managment.user.models import Users
+from account_managment.user.domain import Users
 
 
 @asynccontextmanager

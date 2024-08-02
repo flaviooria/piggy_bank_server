@@ -1,2 +1,2 @@
-from .accounts.models import Accounts  # noqa
-from .user.models import Users  # noqa
+from .accounts.domain import Accounts  # noqa
+from .user.domain import Users  # noqa
