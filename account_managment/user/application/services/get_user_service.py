@@ -1,4 +1,4 @@
-from account_managment.user.interfaces import IUser
+from account_managment.user.domain import IUser
 
 
 class GetUserService:
