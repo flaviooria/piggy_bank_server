@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   db:
-    container_name: account_manager_db
+    container_name: account_manager_db_prod
     image: postgres:alpine
     ports:
       - "5432:5432"
@@ -16,7 +14,7 @@ services:
       - piggy_bank_network
     restart: unless-stopped
   app:
-    container_name: piggy_bank_app
+    container_name: piggy_bank_app_prod
     image: flaviodev99/piggy_bank_server:latest
     ports:
       - "8000:8000"
