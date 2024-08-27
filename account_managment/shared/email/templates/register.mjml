@@ -1,22 +1,39 @@
 <!-- Company Header -->
 <mjml>
-    <mj-body>
-        <mj-section background-color="#f0f0f0">
-            <mj-column>
-                <mj-text font-size="30px">Registro satisfactorio</mj-text>
-            </mj-column>
-        </mj-section>
-        <mj-section>
-            <mj-column>
-
-                <mj-divider border-color="#4987A1"></mj-divider>
-
-                <mj-text font-size="20px" color="#000000" font-family="helvetica">
-                    <span>Bienvenido a <b>Piggi Bank</b> {{username}}
-                    </span>
-                </mj-text>
-
-            </mj-column>
-        </mj-section>
-    </mj-body>
+  <mj-body>
+    <mj-section background-color="#f0f0f0">
+      <mj-column>
+        <mj-text font-size="20px" color="#000000">
+          <span>Bienvenido a
+            <b>Piggi Bank</b>
+          </span>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-divider border-color="#4987A1"></mj-divider>
+        <mj-text font-size="18px">
+          <p>Hola {{username}}, por favor haz clic en el siguiente enlace para validar tu email:
+            <a href="{{link_token}}">Clic aquí</a>
+          </p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#f0f0f0">
+      <mj-column>
+        <mj-social font-size="15px" icon-size="30px" mode="horizontal">
+          <mj-social-element name="facebook" href="https://mjml.io/">
+            Facebook
+          </mj-social-element>
+          <mj-social-element name="instagram" href="https://mjml.io/">
+            Instagram
+          </mj-social-element>
+          <mj-social-element name="x" href="https://mjml.io/">
+            X
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+  </mj-body>
 </mjml>

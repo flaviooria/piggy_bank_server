@@ -7,7 +7,9 @@ from fastapi import (APIRouter, Depends, HTTPException, Request, Response,
 from account_managment.settings.settings import settings
 from account_managment.shared import (AuthAccessToken, AuthRefreshToken,
                                       JwtUtil, Payload)
+from account_managment.shared.email import HtmlEmailTemplateService, SmtpEmailService
 from account_managment.user.application import GetUserService, UserRegisterService
+from account_managment.user.domain import RegisterTemplate
 from account_managment.user.domain.dtos.user_register_dto import UserCreateDto
 from account_managment.user.domain.dtos.user_signin_dto import UserSingInDto
 from account_managment.user.domain.dtos.user_without_password import UserWithoutPasswordDto
@@ -80,6 +82,13 @@ async def register(user_create: UserCreateDto) -> Any:
 
         user = Users.model_validate(
             user_create, update={"token": generate_token()})
+
+        register_template = HtmlEmailTemplateService("register.mjml")
+        email_service = SmtpEmailService(to=(user.name, user.email), mail_from=("no_reply", "no_reply@piggybank.com"),
+                                         subject="Bienvenidx a Piggy Bank")
+
+        await email_service.build_template(register_template).create_email_sender(
+            RegisterTemplate(username=user.name, link_token="#")).send_email()
 
         user_register_service.execute(user)
 

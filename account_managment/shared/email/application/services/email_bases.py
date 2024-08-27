@@ -1,4 +1,4 @@
-import sys
+import os
 from abc import abstractmethod
 from pathlib import Path
 from typing import ClassVar
@@ -16,10 +16,16 @@ class EmailBase:
         pass
 
     def build_template(self, html_template: "HtmlEmailTemplateService"):
+        """
+        Load template and render data
+        """
         pass
 
     @abstractmethod
     def create_email_sender(self, data: dict | BaseModel | str) -> EmailSender:
+        """
+        Set data in template and create email sender to send email
+        """
         pass
 
 
@@ -63,20 +69,37 @@ class HtmlEmailTemplateService:
         self._path_template = template_folder_dir.joinpath(template)
 
         if not self._path_template.exists():
-            raise FileNotFoundError(f"{self._path_template} not exists")
+            raise FileNotFoundError(f"{self._path_template} path to found template folder not exists")
 
         # Read the template file
         self._template = environment.get_template(template)
 
     @classmethod
+    def __find_project_root(cls):
+        # Divide la ruta en sus componentes
+        path_parts = os.path.dirname(__file__).split(os.sep)
+
+        # Busca la carpeta raíz del proyecto en la lista de componentes de la ruta
+        for i in range(len(path_parts), 0, -1):
+            if path_parts[i - 1] == "account_managment":
+                # Reconstruye la ruta desde la carpeta raíz del proyecto
+                return os.sep.join(path_parts[:i])
+        # Si no se encuentra la carpeta raíz, devuelve None
+        return None
+
+    @classmethod
     def __found_template_dir(cls, path_template: str | Path):
-        PARENT_FOLDER = Path(sys.path[1])
-        PROJECT_FOLDER = Path(PARENT_FOLDER / "account_managment")
+        PROJECT_ROOT = cls.__find_project_root()
+
+        if PROJECT_ROOT is None:
+            raise FileNotFoundError(f"{PROJECT_ROOT} path not exists")
+
+        PROJECT_FOLDER = Path(PROJECT_ROOT)
 
         TEMPLATE_FOLDER = Path(PROJECT_FOLDER / path_template)
 
         if not TEMPLATE_FOLDER.exists():
-            raise FileNotFoundError(f"{TEMPLATE_FOLDER} not exists")
+            raise FileNotFoundError(f"{TEMPLATE_FOLDER} path to found template directory not exists")
 
         return TEMPLATE_FOLDER
 
