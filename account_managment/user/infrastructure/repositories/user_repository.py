@@ -1,11 +1,11 @@
 from raw_dbmodel import Repository as RawRepository
 
-from account_managment.user.interfaces import IUser
-from account_managment.user.models import Users
+from account_managment.user.domain import Users, IUser
 
 # Método 1
 data = RawRepository[Users]()
 data.model = Users
+
 
 # Método 2
 

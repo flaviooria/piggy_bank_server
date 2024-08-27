@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from account_managment.user.router import auth_router
+from account_managment.user.infrastructure import auth_router
 
 all_routers = APIRouter()
 

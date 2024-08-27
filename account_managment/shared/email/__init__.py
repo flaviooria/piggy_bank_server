@@ -1,4 +1,5 @@
-from .application.services.email_service import EmailManagerService as EmailService
+from .application.services import SmtpEmailService, HtmlEmailTemplateService
 from .domain.interfaces.email_sender import EmailSender as EmailSender
+from .domain.models.email_models import SmtpOptions
 
-__all__ = ["EmailService", "EmailSender"]
+__all__ = ["EmailSender", "SmtpOptions", "SmtpEmailService", "HtmlEmailTemplateService"]
