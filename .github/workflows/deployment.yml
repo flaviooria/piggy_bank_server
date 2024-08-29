@@ -10,8 +10,10 @@ on:
 jobs:
   install_project:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
-      - name: Cancel Workflow Action
+      - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ github.token }}
