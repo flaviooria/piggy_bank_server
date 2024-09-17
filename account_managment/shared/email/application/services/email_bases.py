@@ -69,7 +69,8 @@ class HtmlEmailTemplateService:
         self._path_template = template_folder_dir.joinpath(template)
 
         if not self._path_template.exists():
-            raise FileNotFoundError(f"{self._path_template} path to found template folder not exists")
+            raise FileNotFoundError(
+                f"{self._path_template} path to found template folder not exists")
 
         # Read the template file
         self._template = environment.get_template(template)
@@ -99,7 +100,8 @@ class HtmlEmailTemplateService:
         TEMPLATE_FOLDER = Path(PROJECT_FOLDER / path_template)
 
         if not TEMPLATE_FOLDER.exists():
-            raise FileNotFoundError(f"{TEMPLATE_FOLDER} path to found template directory not exists")
+            raise FileNotFoundError(
+                f"{TEMPLATE_FOLDER} path to found template directory not exists")
 
         return TEMPLATE_FOLDER
 

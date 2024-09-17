@@ -4,7 +4,7 @@ import emails
 from pydantic import BaseModel, EmailStr
 from typing_extensions import Self
 
-from account_managment.settings.settings import settings
+from account_managment.common import settings
 from account_managment.shared.email.application.services.email_bases import (
     EmailBase, HtmlEmailTemplateService)
 from account_managment.shared.email.domain.interfaces.email_sender import \

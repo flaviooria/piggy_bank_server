@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, Request, status
 from jwt import DecodeError, ExpiredSignatureError, InvalidSignatureError
 
-from account_managment.shared.utils import JwtUtil
+from account_managment.shared.jwt.jwt_generator import JwtUtil
 
 
 class CookiesTokenSecurity:
