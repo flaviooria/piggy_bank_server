@@ -31,8 +31,6 @@ FROM python:3.10-slim
 
 # Establece las variables de entorno
 ARG DB_URI
-ARG DB_SCHEME=psycopg2
-ARG DB_MOTOR=postgres
 ARG APP_NAME="Piggy Bank"
 ARG SECRET_KEY
 ARG EXPIRES_ACCESS_TOKEN
