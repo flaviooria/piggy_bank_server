@@ -15,3 +15,7 @@ class ICrud(ABC, Generic[AnyModel]):
     @abstractmethod
     async def get_one(self, email: str) -> AnyModel | None:
         pass
+
+    @abstractmethod
+    async def get_all(self) -> list[AnyModel]:
+        pass

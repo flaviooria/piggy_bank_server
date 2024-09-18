@@ -14,7 +14,7 @@ class Users(Model):
 
     # Relations
     accounts: fields.ManyToManyRelation["Account"] = fields.ManyToManyField(
-        "models.Account", related_name="account_holders")
+        "models.Account", related_name="accounts_holders")
 
     class Meta:
         table = "users"
