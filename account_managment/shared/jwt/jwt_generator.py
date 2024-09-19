@@ -24,7 +24,6 @@ class JwtUtil:
 
     @staticmethod
     def encode(payload: dict | Payload):
-
         _payload = payload
 
         if isinstance(payload, Payload):

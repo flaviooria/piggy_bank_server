@@ -6,11 +6,11 @@ from typing_extensions import Self
 
 from account_managment.common import settings
 from account_managment.shared.email.application.services.email_bases import (
-    EmailBase, HtmlEmailTemplateService)
-from account_managment.shared.email.domain.interfaces.email_sender import \
-    EmailSender
-from account_managment.shared.email.domain.models.email_models import \
-    SmtpOptions
+    EmailBase,
+    HtmlEmailTemplateService,
+)
+from account_managment.shared.email.domain.interfaces.email_sender import EmailSender
+from account_managment.shared.email.domain.models.email_models import SmtpOptions
 
 
 def strtobool(value: str | bool) -> bool:
@@ -22,12 +22,10 @@ def strtobool(value: str | bool) -> bool:
     elif value.lower() in ("no", "false", "f", "0"):
         return False
     else:
-        raise ValueError(
-            f"{value} is not a valid boolean value, [yes, true, t, 1, no, false, f, 0].")
+        raise ValueError(f"{value} is not a valid boolean value, [yes, true, t, 1, no, false, f, 0].")
 
 
 class SmtpEmail(EmailSender):
-
     def __init__(self, details: dict, msg: str):
         self._details = details
         self._msg = msg
@@ -38,11 +36,7 @@ class SmtpEmail(EmailSender):
         _from = self._details.pop("mail_from")
         smtp = self._details.pop("smtp")
 
-        response = emails.html(
-            html=self._msg,
-            subject=subject,
-            mail_from=_from
-        ).send(to=to, smtp=smtp)
+        response = emails.html(html=self._msg, subject=subject, mail_from=_from).send(to=to, smtp=smtp)
 
         return response.success
 
@@ -52,7 +46,12 @@ class SmtpEmailService(EmailBase):
     Class to send emails using smtp protocol
     """
 
-    def __init__(self, to: Tuple[str, EmailStr] | str, mail_from: Tuple[str, EmailStr] | str, subject: str):
+    def __init__(
+        self,
+        to: Tuple[str, EmailStr] | str,
+        mail_from: Tuple[str, EmailStr] | str,
+        subject: str,
+    ):
         """
         Initializes an instance of the class with the provided parameters.
 
@@ -127,11 +126,20 @@ class SmtpEmailService(EmailBase):
             "user": settings.SMTP_USER,
             "password": settings.SMTP_PASSWORD,
             "ssl": strtobool(settings.SMTP_SSL),
-            "tls": strtobool(settings.SMTP_TLS)
+            "tls": strtobool(settings.SMTP_TLS),
         }
 
     @overload
-    def set_credentials(self, *, host: str, port: int, user: str, password: str, ssl: bool = False, tls: bool = False):
+    def set_credentials(
+        self,
+        *,
+        host: str,
+        port: int,
+        user: str,
+        password: str,
+        ssl: bool = False,
+        tls: bool = False,
+    ):
         """
         Set the credentials for the SMTP server.
 
@@ -280,7 +288,6 @@ class SmtpEmailService(EmailBase):
         """
 
         if self._html_template is None:
-
             if isinstance(data, BaseModel) or isinstance(data, dict):
                 raise Exception("data must be a string")
 

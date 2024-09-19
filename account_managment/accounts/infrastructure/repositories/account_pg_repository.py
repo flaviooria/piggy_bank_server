@@ -1,5 +1,8 @@
-from account_managment.accounts.domain import (AccountCreateDto,
-                                               AccountResponseDto, IAccount)
+from account_managment.accounts.domain import (
+    AccountCreateDto,
+    AccountResponseDto,
+    IAccount,
+)
 from account_managment.entities.entities import Account, Users
 
 
@@ -25,7 +28,6 @@ class AccountPgRepository(IAccount):
 
     async def get_one(self, _id: str) -> Account | None:
         try:
-
             return await Account.get_or_none(id=_id)
         except Exception as ex:
             raise ex

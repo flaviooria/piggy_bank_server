@@ -25,7 +25,7 @@ python -m venv .venv
 
 ### Activar entorno virtual en linux o macos
 
-```bash	
+```bash
 source .venv/bin/activate
 ```
 
@@ -64,7 +64,7 @@ docker build -t piggy_bank:0.1.0 -f Dockerfile .
 ```
 
 ```bash
-docker compose up -d 
+docker compose up -d
 ```
 
 ### Modo producción
@@ -145,7 +145,7 @@ EXPIRES_ACCESS_TOKEN='hours 1'
 # 1day
 EXPIRES_REFRESH_TOKEN='days 1'
 
-# API URL 
+# API URL
 API_URL=https://piggy-bank-server-eg93.onrender.com/api/v1/docs
 
 # Credentials from xata.io hosting db

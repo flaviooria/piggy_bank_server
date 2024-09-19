@@ -1,8 +1,8 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class EmailSender(ABC):
-
+    @abstractmethod
     async def send_email(self) -> bool:
         """
         Sends an email.

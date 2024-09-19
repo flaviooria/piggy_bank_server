@@ -1,8 +1,10 @@
 [flake8]
-per-file-ignores = 
+max-line-length = 120
+filename = *.py
+accept-encodings = utf-8
+per-file-ignores =
     */__init__.py:F401
-exclude = 
+exclude =
     .git,
     __pycache__,
-    build,
-    dist
+    env

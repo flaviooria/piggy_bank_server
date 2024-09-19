@@ -1,7 +1,7 @@
 from account_managment.common import ICrud
 from account_managment.common.interfaces.crud_interface import AnyModel
 from account_managment.entities.entities import Users
-from account_managment.users import UserResponseDto, UserCreateDto
+from account_managment.users import UserCreateDto, UserResponseDto
 
 
 class UserPgRepository(ICrud[Users]):

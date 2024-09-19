@@ -5,7 +5,6 @@ from account_managment.shared.jwt.jwt_generator import JwtUtil
 
 
 class CookiesTokenSecurity:
-
     def __init__(self, cookie_name: str) -> None:
         self.cookie_name = cookie_name
 
@@ -14,7 +13,9 @@ class CookiesTokenSecurity:
 
         if cookie is None:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail=f"{self.cookie_name} is missing")
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"{self.cookie_name} is missing",
+            )
 
         return cookie
 
@@ -23,12 +24,12 @@ access_token_security = CookiesTokenSecurity("access_token")
 refresh_token_security = CookiesTokenSecurity("refresh_token")
 
 
-async def access_token_required(token: str | None = Depends(access_token_security)
-                                ): return await get_token(token=token)
+async def access_token_required(token: str | None = Depends(access_token_security)):
+    return await get_token(token=token)
 
 
-async def refresh_token_required(token: str | None = Depends(
-    refresh_token_security)): return await get_token(token=token)
+async def refresh_token_required(token: str | None = Depends(refresh_token_security)):
+    return await get_token(token=token)
 
 
 async def get_token(token: str | None):
@@ -38,11 +39,8 @@ async def get_token(token: str | None):
         return payload
 
     except InvalidSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid signature")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid signature")
     except ExpiredSignatureError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Expired token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Expired token")
     except DecodeError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Decode error jwt")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Decode error jwt")

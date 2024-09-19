@@ -5,8 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_ignore_empty=True, env_file_encoding='utf-8', extra='ignore')
+    model_config = SettingsConfigDict(env_ignore_empty=True, env_file_encoding="utf-8", extra="ignore")
 
     APP_NAME: str
     API_VERSION: str | None = "/api/v1"
@@ -36,9 +35,14 @@ class Settings(BaseSettings):
         if self.PG_URI_DB is not None:
             return self.PG_URI_DB
 
-        return MultiHostUrl.build(scheme="postgres", username=self.POSTGRES_USERNAME,
-                                  password=self.POSTGRES_PASSWORD, host=self.POSTGRES_HOST, path=self.POSTGRES_DBNAME,
-                                  port=int(self.POSTGRES_PORT)).unicode_string()
+        return MultiHostUrl.build(
+            scheme="postgres",
+            username=self.POSTGRES_USERNAME,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST,
+            path=self.POSTGRES_DBNAME,
+            port=int(self.POSTGRES_PORT),
+        ).unicode_string()
 
 
 load_dotenv(dotenv_path=find_dotenv(".env"))

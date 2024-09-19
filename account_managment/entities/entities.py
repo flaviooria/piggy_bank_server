@@ -4,7 +4,7 @@ from tortoise import Model, fields
 
 
 class Users(Model):
-    id = fields.UUIDField(primary_key=True, default=uuid4())
+    id = fields.UUIDField(primary_key=True, default=uuid4())  # noqa A003
 
     name: str = fields.TextField()
     lastname: str = fields.TextField()
@@ -14,14 +14,15 @@ class Users(Model):
 
     # Relations
     accounts: fields.ManyToManyRelation["Account"] = fields.ManyToManyField(
-        "models.Account", related_name="accounts_holders")
+        "models.Account", related_name="accounts_holders"
+    )
 
     class Meta:
         table = "users"
 
 
 class Account(Model):
-    id = fields.UUIDField(primary_key=True, default=uuid4())
+    id = fields.UUIDField(primary_key=True, default=uuid4())  # noqa A003
 
     name: str = fields.TextField()
     total_amount: float = fields.FloatField()

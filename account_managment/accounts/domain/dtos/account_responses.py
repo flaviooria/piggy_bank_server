@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
 from account_managment.accounts.domain.models.account_pydantic import (
-    AccountPydanticList, AccountResponsePydantic)
+    AccountPydanticList,
+    AccountResponsePydantic,
+)
 
 
 class AccountResponseDto(AccountResponsePydantic, BaseModel):

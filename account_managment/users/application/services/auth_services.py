@@ -4,7 +4,6 @@ from account_managment.users.domain import UserCreateDto, UserSigninDto
 
 
 class AuthService:
-
     def __init__(self, repository: ICrud[Users]) -> None:
         self.repository = repository
 
