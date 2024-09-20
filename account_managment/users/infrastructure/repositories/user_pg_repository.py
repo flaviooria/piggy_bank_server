@@ -1,12 +1,11 @@
-from account_managment.common import ICrud
-from account_managment.common.interfaces.crud_interface import AnyModel
 from account_managment.entities.entities import Users
 from account_managment.users import UserCreateDto, UserResponseDto
+from account_managment.users.domain.interfaces.user import IUser
 
 
-class UserPgRepository(ICrud[Users]):
-    async def get_all(self) -> list[AnyModel]:
-        pass
+class UserPgRepository(IUser):
+    async def get_all(self) -> list[Users]:
+        return await Users.all()
 
     async def insert(self, user_create: UserCreateDto) -> Users:
         try:
