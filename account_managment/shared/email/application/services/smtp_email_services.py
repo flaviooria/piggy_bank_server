@@ -31,14 +31,30 @@ class SmtpEmail(EmailSender):
         self._msg = msg
 
     async def send_email(self) -> bool:
-        subject = self._details.pop("subject")
-        to = self._details.pop("to")
-        _from = self._details.pop("mail_from")
-        smtp = self._details.pop("smtp")
+        try:
+            subject = self._details.pop("subject")
+            to = self._details.pop("to")
+            _from = self._details.pop("mail_from")
+            smtp = self._details.pop("smtp")
 
-        response = emails.html(html=self._msg, subject=subject, mail_from=_from).send(to=to, smtp=smtp)
+            if subject is None:
+                raise Exception("subject is required")
 
-        return response.success
+            if to is None:
+                raise Exception("to is required")
+
+            if _from is None:
+                raise Exception("mail_from is required")
+
+            _smtp = SmtpOptions.model_validate(smtp)
+
+            response = emails.html(html=self._msg, subject=subject, mail_from=_from).send(
+                to=to, smtp=_smtp.model_dump()
+            )
+
+            return response.success
+        except Exception as e:
+            raise e
 
 
 class SmtpEmailService(EmailBase):
@@ -48,9 +64,9 @@ class SmtpEmailService(EmailBase):
 
     def __init__(
         self,
-        to: Tuple[str, EmailStr] | str,
-        mail_from: Tuple[str, EmailStr] | str,
-        subject: str,
+        to: Tuple[str, EmailStr] | str | None = None,
+        mail_from: Tuple[str, EmailStr] | str | None = None,
+        subject: str | None = None,
     ):
         """
         Initializes an instance of the class with the provided parameters.
@@ -128,6 +144,18 @@ class SmtpEmailService(EmailBase):
             "ssl": strtobool(settings.SMTP_SSL),
             "tls": strtobool(settings.SMTP_TLS),
         }
+
+    def subject(self, subject: str):
+        self._params["subject"] = subject
+        return self
+
+    def mail_from(self, mail_from: Tuple[str, EmailStr] | str):
+        self._params["mail_from"] = mail_from
+        return self
+
+    def to(self, to: Tuple[str, EmailStr] | str):
+        self._params["to"] = to
+        return self
 
     @overload
     def set_credentials(
