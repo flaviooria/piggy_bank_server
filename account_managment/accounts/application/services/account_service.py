@@ -1,7 +1,6 @@
-from account_managment.common import ICrud
-from account_managment.entities.entities import Account
+from account_managment.accounts.domain import IAccount
 
 
 class AccountService:
-    def __init__(self, repository: ICrud[Account]) -> None:
+    def __init__(self, repository: IAccount) -> None:
         self.repository = repository
