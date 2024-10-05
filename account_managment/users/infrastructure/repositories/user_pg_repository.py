@@ -1,5 +1,5 @@
 from account_managment.entities.entities import Users
-from account_managment.users import UserCreateDto, UserResponseDto
+from account_managment.users import UserCreateDto
 from account_managment.users.domain.interfaces.user import IUser
 
 
@@ -11,7 +11,7 @@ class UserPgRepository(IUser):
         try:
             user_created = await Users.create(**user_create.model_dump())
 
-            return await UserResponseDto.from_tortoise_orm(user_created)
+            return user_created
         except Exception as ex:
             raise ex
 

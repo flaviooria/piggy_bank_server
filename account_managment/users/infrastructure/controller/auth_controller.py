@@ -1,12 +1,21 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Response, status
 from typing_extensions import Annotated
 
 from account_managment.common import settings
 from account_managment.entities.entities import Users
-from account_managment.shared import AuthAccessToken, AuthRefreshToken, JwtUtil, Payload
+from account_managment.shared import (
+    AuthAccessToken,
+    AuthRefreshToken,
+    JwtUtil,
+    Payload,
+    SendNotificationEmail,
+)
+from account_managment.shared.email.application.services.email_bases import (
+    HtmlEmailTemplateService,
+)
 from account_managment.users.application import AuthService, UserService
 from account_managment.users.domain import UserCreateDto, UserResponseDto, UserSigninDto
 from account_managment.users.infrastructure.repositories.user_pg_repository import (
@@ -65,7 +74,7 @@ auth_router = APIRouter(tags=["auth"])
 
 
 @auth_router.post("/signup", status_code=status.HTTP_201_CREATED, response_model=UserResponseDto)
-async def register(user: UserCreateDto) -> Any:
+async def register(user: UserCreateDto, background_tasks: BackgroundTasks) -> Any:
     try:
         user = UserCreateDto.model_validate(user)
 
@@ -82,13 +91,21 @@ async def register(user: UserCreateDto) -> Any:
         user.token = generate_token()
 
         # TODO: falta añadir el servicio para enviar correo electronico
+        register_email_template = HtmlEmailTemplateService(template="register.mjml")
+        background_tasks.add_task(
+            SendNotificationEmail,
+            to=user.email,
+            subject="Registro",
+            template=register_email_template,
+            data={"username": user.name},
+        )
 
         return await auth_service.register(user)
 
     except HTTPException:
         raise
     except Exception as ex:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=ex)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(ex))
 
 
 @auth_router.post("/signin", status_code=status.HTTP_200_OK, response_model=UserResponseDto)
@@ -127,7 +144,7 @@ async def login(user_signin: UserSigninDto, response: Response) -> Any:
     except HTTPException:
         raise
     except Exception as ex:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=ex)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(ex))
 
 
 @auth_router.get("/logout")
