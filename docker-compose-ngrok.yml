@@ -1,0 +1,63 @@
+services:
+  db:
+    container_name: piggy_bank_db
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+    networks:
+      - piggy_bank_network
+    restart: on-failure
+  app:
+    container_name: piggy_bank_ngrok
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: piggy_bank:latest
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.development
+      - .env.db
+    networks:
+      - piggy_bank_network
+    depends_on:
+      - db
+    restart: on-failure
+    volumes:
+      - .:/app
+    entrypoint:
+      [
+        "uvicorn",
+        "account_managment.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_server
+    command:
+      - "http"
+      - "http://host.docker.internal:8000"
+      - "--url"
+      - "seemingly-game-sculpin.ngrok-free.app"
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    volumes:
+      - ./ngrok.yml:/ngrok/ngrok.yml
+    ports:
+      - "4040:4040"
+networks:
+  piggy_bank_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
