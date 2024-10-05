@@ -1,3 +1,5 @@
+import os
+
 from dotenv import find_dotenv, load_dotenv
 from pydantic import computed_field
 from pydantic_core import MultiHostUrl
@@ -30,8 +32,10 @@ class Settings(BaseSettings):
     SMTP_SSL: bool | None = False
     SMTP_TLS: bool | None = False
 
+    ENVIRONMENT: str = "local"
+
     @computed_field
-    def uri_db_postgress(self) -> str:
+    def uri_db_postgres(self) -> str:
         if self.PG_URI_DB is not None:
             return self.PG_URI_DB
 
@@ -45,5 +49,11 @@ class Settings(BaseSettings):
         ).unicode_string()
 
 
-load_dotenv(dotenv_path=find_dotenv(".env"))
+if os.getenv("ENVIRONMENT") == "development":
+    load_dotenv(dotenv_path=find_dotenv(".env.development"), override=True)
+elif os.getenv("ENVIRONMENT") == "production":
+    load_dotenv(dotenv_path=find_dotenv(".env.prod"), override=True)
+else:
+    load_dotenv(dotenv_path=find_dotenv(".env"), override=True)
+
 settings = Settings()
