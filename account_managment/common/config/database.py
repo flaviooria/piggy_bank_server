@@ -11,4 +11,4 @@ def InitDb(app: FastAPI):
         app_modules={"models": ["account_managment.entities.entities"]},
     )
 
-    register_tortoise(app, config=config, generate_schemas=True)
+    register_tortoise(app, config=config, generate_schemas=True, add_exception_handlers=True)
