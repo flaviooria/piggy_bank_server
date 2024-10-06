@@ -29,3 +29,6 @@ class Account(Model):
 
     # Relations
     account_holders: fields.ManyToManyRelation[Users]
+
+    class Meta:
+        table = "accounts"
