@@ -9,7 +9,7 @@ from account_managment.shared.email.application.services.smtp_email_services imp
     SmtpEmailService,
 )
 
-smtp_service = SmtpEmailService(mail_from=("Flavio", "flavio.oriap@gmail.com"))
+smtp_service = SmtpEmailService(mail_from=("no reply", "noreply@piggy-bank.com"))
 
 
 async def send_notification_email(
