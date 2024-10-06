@@ -10,6 +10,8 @@ RUN pip install poetry
 # Copia el archivo de dependencias
 COPY ./pyproject.toml ./poetry.lock* /app/
 
+RUN poetry self add poetry-plugin-export
+
 # exporta las dependencias a un archivo requirements.txt
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
