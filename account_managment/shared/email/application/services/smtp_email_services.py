@@ -52,6 +52,12 @@ class SmtpEmail(EmailSender):
                 to=to, smtp=_smtp.model_dump()
             )
 
+            email = to[1] if isinstance(to, Tuple) else to
+
+            if response.success:
+                print(f"Message sent to {email}")
+            else:
+                print(f"Message could not be sent to: {email}")
             return response.success
         except Exception as e:
             raise e
