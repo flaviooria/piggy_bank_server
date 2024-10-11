@@ -22,20 +22,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: login docker
-        if:  github.event_name == 'release' && github.event.action == 'published'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: build and push
-        if:  github.event_name == 'release' && github.event.action == 'published'
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:latest
-
       - name: Install python
         uses: actions/setup-python@v5
         with:
@@ -44,7 +30,21 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pydantic requests
+          python -m pip --upgrade pip
+          pythpn -m pip install pydantic requests
+
+
+      - name: login docker
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:latest
 
       - name: Deploy to Render
         env:
