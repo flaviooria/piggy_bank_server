@@ -1,8 +1,9 @@
 name: Create image server and push to dockerhub
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - develop
 
 
 jobs:
@@ -31,24 +32,69 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip --upgrade pip
-          pythpn -m pip install pydantic requests
+          pythpn -m pip install pydantic requests poetry
+          poetry install
 
+      - name: Build
+        run: poetry build
 
-      - name: login docker
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+      - name: Create release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login docker
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: build and push
+      - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:${{ github.ref }}
+
+
+  deploy_render:
+    runs-on: ubuntu-latest
+    needs: [install_project]
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: show files
+        run: ls -la
+
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip --upgrade pip
+          pythpn -m pip ./dist/*.whl
 
       - name: Deploy to Render
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:latest"
+          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref }}"
         run: |
           python3 deploy_render.py
