@@ -1,11 +1,11 @@
-name: Pipeline
+name: Create image server and push to dockerhub
 
 on:
-  push:
-    branches: [ develop ]
+  release:
+    types: [published]
 
-  pull_request:
-    branches: [ feature/* ]
+  push:
+    branches: [develop]
 
 jobs:
   install_project:
@@ -24,14 +24,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Deploy hook on render
+        env:
+          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:latest"
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          echo $DOCKER_IMAGE_PATH $RENDER_API_KEY
+
       - name: login docker
-        if: github.event_name == 'push' && github.ref_name == 'develop'
+        if:  github.event_name == 'release' && github.event.action == 'published'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: build and push
+        if:  github.event_name == 'release' && github.event.action == 'published'
         uses: docker/build-push-action@v6
         with:
           push: true
