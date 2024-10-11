@@ -3,7 +3,8 @@
 
 ### dotenv ###
 .env
-.env.*
+.env.prod*
+.env.dev*
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
