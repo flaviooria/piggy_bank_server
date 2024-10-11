@@ -4,8 +4,6 @@ on:
   release:
     types: [published]
 
-  push:
-    branches: [develop]
 
 jobs:
   install_project:
@@ -24,13 +22,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Deploy hook on render
-        env:
-          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:latest"
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          echo $DOCKER_IMAGE_PATH $RENDER_API_KEY
-
       - name: login docker
         if:  github.event_name == 'release' && github.event.action == 'published'
         uses: docker/login-action@v3
@@ -44,3 +35,20 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:latest
+
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install pydantic requests
+
+      - name: Deploy to Render
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:latest"
+        run: |
+          python3 deploy_render.py
