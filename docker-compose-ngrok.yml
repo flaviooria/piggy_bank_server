@@ -23,7 +23,6 @@ services:
       - "8000:8000"
     env_file:
       - .env.development
-      - .env.db
     networks:
       - piggy_bank_network
     depends_on:
