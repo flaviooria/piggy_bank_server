@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip --upgrade pip
+          python -m pip install --upgrade pip
           python -m pip install pydantic requests poetry
           poetry install
 
@@ -91,7 +91,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip --upgrade pip
+          python -m pip install --upgrade pip
           pythpn -m pip ./dist/*.whl
 
       - name: Deploy to Render
