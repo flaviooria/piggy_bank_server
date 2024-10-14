@@ -1,7 +1,6 @@
 name: Create image server and push to dockerhub
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
   install_project:
