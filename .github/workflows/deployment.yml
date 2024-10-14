@@ -2,7 +2,7 @@ name: Create image server and push to dockerhub
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
 
 jobs:
   install_project:
