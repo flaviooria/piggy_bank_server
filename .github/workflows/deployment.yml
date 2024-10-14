@@ -1,6 +1,8 @@
 name: Create image server and push to dockerhub
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [develop]
 
 jobs:
   install_project:
@@ -66,13 +68,6 @@ jobs:
           name: dist
           path: dist
           retention-days: 1
-
-      - name: Upload deploy render script
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy_render
-          path: deploy_render.py
-          retention-days: 7
 
       - name: Login docker
         uses: docker/login-action@v3
