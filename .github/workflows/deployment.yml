@@ -2,7 +2,7 @@ name: Create image server and push to dockerhub
 
 on:
   push:
-    branches: [main]
+    branches: [development]
 
 jobs:
   install_project:
@@ -103,8 +103,9 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: show files
-        run: ls -la
+
+      - name: Show files dist
+        run: ls -la dist
 
       - name: Install python
         uses: actions/setup-python@v5
@@ -115,14 +116,11 @@ jobs:
       - name: Install dependencies
         run: pip install ./dist/*.whl
 
-      - name: Show environment
-        run: |
-          echo "RENDER_API_KEY: $RENDER_API_KEY"
-          echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
-
       - name: Deploy to Render
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref_name }}"
         run: |
+          echo "RENDER_API_KEY: $RENDER_API_KEY"
+          echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
           python3 deploy_render.py
