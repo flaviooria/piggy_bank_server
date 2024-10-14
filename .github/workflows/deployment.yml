@@ -29,9 +29,20 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
-          cache: "poetry"
+
+      - name: Cache poetry
+        uses: actions/cache@v4
+        id: cache-poetry
+        with:
+          path: |
+            .env
+            ~/.cache/pypoetry
+          key: ${{runner.os}}-poetry-${{hashFiles('**/poetry.lock')}}
+          restore-keys: |
+            ${{runner.os}}-poetry-
 
       - name: Install poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
         with:
           version: 1.8.3
