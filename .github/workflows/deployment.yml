@@ -124,4 +124,4 @@ jobs:
           echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
 
       - name: Deploy to Render
-        run: python ./deploy_render.py
+        run: python -m deploy_render
