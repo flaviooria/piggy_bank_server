@@ -116,7 +116,7 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install ./dist/*.whl
+        run: pip install -v ./dist/account_managment-0.1.0-py3-none-any.whl
 
       - name: Deploy to Render
         env:
