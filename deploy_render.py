@@ -52,7 +52,7 @@ class DeployRenderService:
                 print(f"Resume service with id {self.service_id}")
                 return
 
-            raise Exception("Error when trying to resume service")
+            print(f"Service id {self.service_id} is already started, no need to restart")
         except Exception:
             raise
 
