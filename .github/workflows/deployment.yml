@@ -1,8 +1,7 @@
 name: Create image server and push to dockerhub
 
 on:
-  push:
-    branches: [develop]
+  workflow_dispatch:
 
 jobs:
   install_project:
