@@ -100,14 +100,15 @@ jobs:
       RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
-          name: deploy_render
-          path: ./deploy_render.py
+          access_token: ${{ github.token }}
 
-      - name: Show files dist
-        run: ls -la
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install python
         uses: actions/setup-python@v5
@@ -123,4 +124,4 @@ jobs:
           echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
 
       - name: Deploy to Render
-        run: python -m deploy_render
+        run: python deploy_render.py
