@@ -54,6 +54,10 @@ jobs:
           installer-parallel: true
           virtualenvs-path: ./env
 
+      - name: Configure poetry
+        if: steps.cache-poetry.outputs.cache-hit == 'true'
+        run: poetry config virtualenvs.in-project true
+
       - name: Install dependencies
         run: poetry install --no-interaction --no-ansi
 
