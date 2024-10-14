@@ -105,6 +105,9 @@ jobs:
     permissions:
       actions: write
       contents: read
+    env:
+      DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref_name }}"
+      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
 
     steps:
       - name: Download artifact
@@ -124,11 +127,10 @@ jobs:
       - name: Install dependencies
         run: pip install requests pydantic
 
-      - name: Deploy to Render
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref_name }}"
+      - name: Show variables
         run: |
           echo "RENDER_API_KEY: $RENDER_API_KEY"
           echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
-          python3 deploy_render.py
+
+      - name: Deploy to Render
+        run: python ./deploy_render.py
