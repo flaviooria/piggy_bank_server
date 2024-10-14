@@ -79,7 +79,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.sha }}
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
@@ -94,7 +94,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:${{ github.sha }}
 
   deploy_render:
     runs-on: ubuntu-latest
@@ -106,7 +106,7 @@ jobs:
       actions: write
       contents: read
     env:
-      DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref_name }}"
+      DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.sha }}"
       RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
 
     steps:
