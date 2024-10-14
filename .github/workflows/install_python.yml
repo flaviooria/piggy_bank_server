@@ -28,12 +28,12 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10.0
+          python-version: ${{ matrix.python-version }}
 
       - name: Install poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.3
+          version: latest
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
