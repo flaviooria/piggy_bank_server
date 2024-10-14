@@ -2,7 +2,7 @@ name: Install Python
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
 
 jobs:
   build:
