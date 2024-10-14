@@ -4,17 +4,18 @@ version = "0.1.0"
 description = ""
 authors = ["Flavio Oria <flavio.oriap@gmail.com>"]
 readme = "README.md"
+include = [{ path = "./deploy_render.py", format = ["sdist", "wheel"] }]
 
 [tool.poetry.dependencies]
 python = "^3.10,<3.11"
 fastapi = "0.111.0"
 bcrypt = "4.1.3"
-pyjwt = {extras = ["crypto"], version = "2.8.0"}
+pyjwt = { extras = ["crypto"], version = "2.8.0" }
 python-dotenv = "1.0.1"
 emails = "0.6"
 jinja2 = "3.1.4"
 mjml = "0.11.0"
-tortoise-orm = {extras = ["asyncpg"], version = "^0.21.6"}
+tortoise-orm = { extras = ["asyncpg"], version = "^0.21.6" }
 pydantic = "^2.9.1"
 pydantic-settings = "^2.5.2"
 
@@ -29,6 +30,10 @@ line-length = 120
 
 [tool.isort]
 profile = "black"
+
+[tool.poetry.scripts]
+deploy_render = 'deploy_render:main'
+
 
 [build-system]
 requires = ["poetry-core"]
