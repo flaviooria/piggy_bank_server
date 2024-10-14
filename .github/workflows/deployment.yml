@@ -113,7 +113,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{matrix.python-version}}
-          cache: "pip"
 
       - name: Install dependencies
         run: pip install -v ./dist/account_managment-0.1.0-py3-none-any.whl
