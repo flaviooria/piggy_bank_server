@@ -99,3 +99,5 @@ docker compose up -f docker-compose.production.yml -d
 > compose, en nuestro caso antes de ejecutar el docker compose en modo desarrollo reemplazarlo por ***POSTGRES_HOST=db***
 
 - Crear los ficheros **.env** y **.env.prod**. ⬅️ 👀
+## Actions
+[![Create image server and push to dockerhub](https://github.com/flaviooria/piggy_bank_server/actions/workflows/deployment.yml/badge.svg?branch=develop)](https://github.com/flaviooria/piggy_bank_server/actions/workflows/deployment.yml)
