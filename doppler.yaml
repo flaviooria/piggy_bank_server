@@ -1,0 +1,3 @@
+setup:
+  - project: piggy_bank_server
+    config: prd
