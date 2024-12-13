@@ -1,3 +1,4 @@
+import os
 import socket
 
 import uvicorn
@@ -26,6 +27,6 @@ def get_port_available(port: int = 8000) -> int:
 
 
 if __name__ == "__main__":
-    port = get_port_available()
+    port = get_port_available(int(os.environ.get("PORT", "8000")))
     print("Piggy Bank Server is running on port", port)
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
