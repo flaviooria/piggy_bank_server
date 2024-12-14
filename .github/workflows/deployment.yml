@@ -69,6 +69,11 @@ jobs:
           path: dist
           retention-days: 1
 
+      - name: Get version image
+        run: |
+          VERSION_DOCKER_IMAGE=$(python ./get_version.py)
+          echo "VERSION_DOCKER_IMAGE=$VERSION_DOCKER_IMAGE" >> $GITHUB_ENV
+
       - name: Login docker
         uses: docker/login-action@v3
         with:
@@ -79,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:${{ github.ref_name }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:${{ env.VERSION_DOCKER_IMAGE }}
 
   deploy_render:
     runs-on: ubuntu-latest
@@ -91,8 +96,8 @@ jobs:
       actions: write
       contents: read
     env:
-      DOCKER_IMAGE_PATH: "docker.io/flaviodev99/piggy_bank_server:${{ github.ref_name }}"
       RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     steps:
       - name: Cancel Previous Runs
@@ -111,12 +116,16 @@ jobs:
           python-version: ${{matrix.python-version}}
 
       - name: Install dependencies
-        run: pip install requests pydantic
+        run: pip install requests pydantic toml
 
       - name: Show variables
         run: |
           echo "RENDER_API_KEY: $RENDER_API_KEY"
-          echo "DOCKER_IMAGE_PATH: $DOCKER_IMAGE_PATH"
+
+      - name: Get version image
+        run: |
+          export DOCKER_IMAGE_PATH=${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:$(python get_version.py)
+          echo $DOCKER_IMAGE_PATH
 
       - name: Deploy to Render
         run: python deploy_render.py
