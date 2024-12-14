@@ -124,7 +124,7 @@ jobs:
 
       - name: Get version image
         run: |
-          export DOCKER_IMAGE_PATH=${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:$(python get_version.py)
+          export DOCKER_IMAGE_PATH=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/piggy_bank_server:$(python get_version.py)
           echo $DOCKER_IMAGE_PATH
 
       - name: Deploy to Render
