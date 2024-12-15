@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "account-managment"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["Flavio Oria <flavio.oriap@gmail.com>"]
 readme = "README.md"
