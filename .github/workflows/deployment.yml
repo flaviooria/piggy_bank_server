@@ -71,7 +71,7 @@ jobs:
 
       - name: Get version image
         run: |
-          VERSION_DOCKER_IMAGE=$(python ./get_version.py)
+          VERSION_DOCKER_IMAGE=$(poetry run python get_version.py)
           echo "VERSION_DOCKER_IMAGE=$VERSION_DOCKER_IMAGE" >> $GITHUB_ENV
 
       - name: Login docker
